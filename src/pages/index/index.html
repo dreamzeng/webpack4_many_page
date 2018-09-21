@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>架构能力数据</title>
+	<style>
+		[v-cloak]{
+			display: none;
+		}
+	</style>
+	<link rel="stylesheet" href="./assets/css/datepicker.css">
+	<script src="./assets/js/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+	<div id="app" class="app" v-cloak>
+		<div class="nav">
+			<div class="item">
+				<label>组：</label>
+				<select v-model="groupValue">
+					<option  v-for="(item, index) in groupkey">{{item}}</option>
+				</select>
+			</div>
+			<div class="item">
+				<label>架构能力：</label>
+				<select v-model="architectureValue">
+					<option v-for="(item, index) in architectureKey" :value="item.key">{{item.value}}</option>
+				</select>
+			</div>
+			<div class="item">
+				<label>开始时间：</label>
+				<div class="c-datepicker-date-editor J-datepickerTime-range">
+					<i class="c-datepicker-range__icon kxiconfont icon-clock"></i>
+					<input placeholder="开始日期" v-model="beginTime" id="beginTime" class="c-datepicker-data-input" value="">
+				</div>
+			</div>
+			<div class="item">
+				<label>结束时间：</label>
+				<div class="c-datepicker-date-editor J-datepickerTime-range">
+					<i class="c-datepicker-range__icon kxiconfont icon-clock"></i>
+					<input placeholder="结束日期" v-model="endTime" id="endTime" class="c-datepicker-data-input" value="">
+				</div>
+			</div>
+			<div class="item">
+				<button @click="search" type="button" class="a-button"><span>查询</span></button>
+			</div>
+		</div>
+		<div ref="main" :style="{ height: mainHeight + 'px',width:'100%' }"></div>
+	</div>
+</body>
+<script src="./assets/js/moment.min.js"></script>
+<script src="./assets/js/datepicker.all.js"></script>
+<script>
+	setTimeout(()=>{
+		$('.J-datepickerTime-range').datePicker({
+			format: 'YYYY-MM-DD'
+		});
+	},1000);
+</script>
+</html>
