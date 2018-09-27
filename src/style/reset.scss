@@ -1,0 +1,221 @@
+html {}
+
+html * {
+  outline: 0;
+}
+
+body {
+  font-family: "Microsoft YaHei", "微软雅黑", sans-serif, Helvetica, Tahoma, Arial, STXihei;
+}
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+textarea,
+p,
+blockquote,
+th,
+td,
+hr,
+button,
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+header,
+footer,
+section,
+article,
+aside,
+nav,
+hgroup,
+address,
+figure,
+figcaption,
+menu,
+details {
+  display: block;
+}
+
+input,
+select,
+textarea {
+  font-size: 100%;
+  font-family: "Microsoft Yahei";
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+html,
+body,
+fieldset,
+img,
+iframe,
+abbr {
+  border: 0
+}
+
+i,
+cite,
+em,
+var,
+address,
+dfn {
+  font-style: normal;
+}
+
+abbr,
+acronym {
+  border: 0;
+  font-variant: normal
+}
+
+del {
+  text-decoration: line-through
+}
+
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+th,
+var {
+  font-style: normal;
+  font-weight: 500
+}
+
+ol,
+ul,
+li {
+  list-style: none
+}
+
+caption,
+th {
+  text-align: left
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 100%;
+  font-weight: 500
+}
+
+button,
+input,
+select,
+textarea {
+  font-size: 100%;
+}
+
+a,
+button {
+  cursor: pointer;
+  font-family: "Microsoft Yahei";
+}
+
+textarea {
+  overflow: auto;
+  resize: none;
+}
+
+em,
+strong {
+  font-style: normal;
+  font-weight: normal;
+}
+
+body,
+textarea,
+input,
+button,
+select,
+keygen,
+legend {
+  color: #666;
+  outline: 0;
+}
+
+label,
+summary {
+  cursor: default;
+}
+
+.clearOver {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  overflow: hidden;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+* html .clearfix {
+  height: 1%;
+}
+
+q:before,
+q:after {
+  content: ''
+}
+
+a:focus {
+  //background-color: rgba(0, 0, 0, 1);
+}
+
+ins,
+a {
+  text-decoration: none;
+}
+
+input:focus {
+  outline-offset: 0;
+}
+
+input {
+  -webkit-box-shadow: 0 0 0 1000px white inset;
+}

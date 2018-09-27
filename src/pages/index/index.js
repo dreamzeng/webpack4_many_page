@@ -1,5 +1,8 @@
 import "./index.scss";
-import Vue from '@/lib/vue';
+const Vue = process.env.NODE_ENV == 'development' ?
+            require('@/lib/vue'):
+            require('@/lib/vue.min');
+
 const echarts = require('echarts');
 
 const clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
@@ -17,28 +20,36 @@ async function get(file = 'time') {
 } */
 //const getData = time => require(`@/assets/db/groupability-${time}.json`);
 
-const getData = file=>{
-    let data;
-    $.ajax({
-        url: `./assets/db/${file}.json`,
-        cache: false,
-        async: false,
-        success: function(res){
-            data = res;
-        },
-        error:function(res){
-          data = false;
-        }
-    });
-    return data;
-}
+const getData = (()=>{
+    const timeData = {};
+    return file=>{
+        if(timeData[file])
+            return timeData[file];
+        let data;
+        $.ajax({
+            url: `./assets/db/${file}.json`,
+            cache: false,
+            async: false,
+            success: function(res){
+                data = res;
+                timeData[file] = res;
+            },
+            error:function(res){
+                data = false;
+            }
+        });
+        return data;
+    }
+})();
 
 const timeList = getData('time');
 
 const getGroupKeys = (function(){
-    let data = getData('groupability-'+timeList[0]);
-    return Object.keys(data);
+    return ['商业化产品开发组','搜索组','服务器一组','服务器二组','服务器三组','服务器四组','服务器五组'];
+    /* let data = getData('groupability-'+timeList[0]);
+    return Object.keys(data); */
 })();
+
 
 const getGroupability = timeList=>{
     let temp = [];
@@ -50,7 +61,7 @@ const getGroupability = timeList=>{
             temp.push({
                 time:item,
                 data:getData('groupability-'+item)
-            })
+            });
         }
     });
     for(let i = 0,l = currentIndex.length;i<l;i++){
@@ -99,7 +110,7 @@ const options = {
     series: []
 };
 
-const setSeriesItem = (name,data=[])=>{
+const setSeriesItem = (name,data=[],color)=>{
     return {
         name: name,
         type: 'bar',
@@ -110,77 +121,64 @@ const setSeriesItem = (name,data=[])=>{
                 position: 'inside'
             }
         },
+        itemStyle:{
+            color:color
+        }, 
         data: data
     }
 }
-const typeList = ['具备','不具备','不需要','暂无数据'];
-
-options.legend.data = [...typeList,'百分比'];
+//不需要  具备 不具备
+const typeList = ['具备','不具备','不需要'];
 
 const architectureKey = [
     {
-        key:'circuitbreaker',
-        value:'熔断能力'
-    },
-    {
-        key:'monitoring',
-        value:'监控能力'
-    },
-    {
         key:'withoutsinglepoint',
         value:'无单点'
-    },
-    {
-        key:'multiinstaninacity',
-        value:'同城多活'
-    },
-    {
-        key:'autoexpansion',
-        value:'弹性伸缩'
-    },
-    {
-        key:'dynastaticseparation',
-        value:'动静分离'
-    },
-    {
+    },{
+        key:'circuitbreaker',
+        value:'熔断能力'
+    },{
         key:'demotion',
         value:'降级能力'
-    },
-    {
-        key:'dubborpc',
-        value:'dubbo化'
-    },
-    {
-        key:'planforaccident',
-        value:'预案'
-    },
-    {
-        key:'readwriteseparation',
-        value:'读写分离'
-    },
-    {
+    },{
         key:'flowlimitation',
         value:'限流能力'
-    },
-    {
-        key:'datausingvarapi',
-        value:'业务和数据分离'
-    },
-    {
-        key:'multiinstanindiffcity',
-        value:'异地多活'
-    },
-    {
-        key:'checkalive',
-        value:'check.do接口检测'
-    },
-    {
+    },{
+        key:'planforaccident',
+        value:'预案'
+    },{
         key:'recoverfromnothing',
         value:'从零恢复'
-    },
-    {
+    },{
+        key:'readwriteseparation',
+        value:'读写分离'
+    },{
+        key:'dynastaticseparation',
+        value:'动静分离'
+    },{
         key:'bdatasepfromandata',
         value:'业务数据和大数据分离'
+    },{
+        key:'autoexpansion',
+        value:'弹性伸缩'
+    },{
+        key:'checkalive',
+        value:'check.do接口检测'
+    },{
+        key:'monitoring',
+        value:'监控能力'
+    },{
+        key:'multiinstaninacity',
+        value:'同城多活'
+    },{
+        key:'multiinstanindiffcity',
+        value:'异地多活'
+    },{
+        key:'dubborpc',
+        value:'dubbo化'
+    },{
+        key:'datausingvarapi',
+        value:'业务和数据分离'
     }
 ]
 
@@ -193,11 +191,11 @@ new Vue({
             newTimeList: timeList || [],
             mainHeight:0,
 
-            groupValue:'', //组value
-            groupkey:[], //组key
+            groupValue:getGroupKeys[0] || '', //组value
+            groupkey:getGroupKeys||[], //组key
 
-            architectureValue:'',//架构能力value
-            architectureKey:[], //架构能力key
+            architectureValue:architectureKey[0].key || '',//架构能力value
+            architectureKey:architectureKey || [], //架构能力key
 
             chart:null,
             seriesDatas:[],
@@ -223,10 +221,6 @@ new Vue({
     },
     created(){
         this.mainHeight = clientHeight-120;
-        this.groupkey = getGroupKeys;
-        this.groupValue = getGroupKeys[0];
-        this.architectureKey = architectureKey;
-        this.architectureValue = architectureKey[0].key;
     },
     mounted(){
         this.beginTime$ = $('#beginTime');
@@ -291,16 +285,31 @@ new Vue({
             this.chart.setOption(options);
         },
         setOptions(options,timeList){
-            let {dataList,proportion} = this.getData(this.groupValue,this.architectureValue,timeList);
-
-            let series = typeList.map(item=>{
-                return setSeriesItem(item,dataList[item]);
+            let {dataList,proportion,fullArr} = this.getData(this.groupValue,this.architectureValue,timeList);
+            //console.log(fullArr);
+            let xMaxList = fullArr.map(currentValue=>{
+                return currentValue[currentValue.length-1];
             });
+            let xMax = Math.max(...xMaxList);
+            options.yAxis[0].max = parseInt(xMax) + parseInt(xMax*0.1);
+            let yMax = Math.max(...proportion);
+            options.yAxis[1].max = parseInt(yMax) + 1;
+
+            let colorMap = ['rgb(26,211,177)','rgb(95,176,232)','rgb(250,111,134)'];
+            let tList = ['不需要','具备','不具备'];
+            let series = tList.map((item,index)=>{
+                return setSeriesItem(item,dataList[item],colorMap[index]);
+            });
+            options.legend.data = [...tList,'百分比'];
             options.series = [...series,{
                 name:'百分比',
                 type:'line',
                 yAxisIndex: 1,
-                data:proportion
+                data:proportion,
+                label:{
+                    show:true,
+                    formatter:'{c} %'
+                }
             }];
         },
         getData(groupkey,architectureValue,timeList){
@@ -322,17 +331,16 @@ new Vue({
             typeList.forEach((item,index)=>{
                 let data =[];
                 arr.forEach(function(currentValue){
-                    data.push(currentValue[index])
+                    data.push(currentValue[index+1])
                 });
                 dataList[item] = data;
             });
             //计算百分比
             let proportion = arr.map((item)=>{
-                let n = ( (parseInt(item[0])+parseInt(item[2])) / parseInt(item[4]) ) * 100;
+                let n = ( (parseInt(item[1])+parseInt(item[3])) / (parseInt(item[1])+parseInt(item[2])+parseInt(item[3])) ) * 100;
                 return n.toFixed(2);
             });
-           
-            return {dataList,proportion};
+            return {dataList,proportion,fullArr:arr};
         }
     }
 });

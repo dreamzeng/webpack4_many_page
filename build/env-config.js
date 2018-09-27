@@ -8,6 +8,7 @@ const path = require('path')
  * dirName: 打包的路径，只在build的时候有用
  * baseUrl: 这个环境下面的api 请求的域名
  * assetsPublicPath: 静态资源存放的域名，未指定则使用相对路径
+ * 来源：https://juejin.im/entry/5afd429b51882542714ff881
  * */
 const ENV_LIST = [
     {
@@ -34,7 +35,7 @@ const ENV_LIST = [
  
 ]
 
-const argv = JSON.parse(process.env.npm_config_argv).original || process.argv
+const argv = JSON.parse(process.env.npm_config_argv).original || process.argv;
 const HOST_ENV = argv[2] ? argv[2].replace(/[^a-z]+/ig,"") : ''
 //没有设置环境，则默认为第一个
 const HOST_CONF = HOST_ENV  ? ENV_LIST.find(item => item.envName === HOST_ENV) : ENV_LIST[0]
