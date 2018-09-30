@@ -3,9 +3,7 @@ const path = require('path');
 const webpack = require("webpack");
 const glob = require("glob");
 require("./env-config");
-
-
-// 分离css
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 //消除冗余的css
 const purifyCssWebpack = require("purifycss-webpack");
@@ -57,6 +55,7 @@ module.exports = {
 		rules: [...rules]
 	},
 	resolve: {
+		extensions: ['.js', '.vue', '.json'],
 		alias: {
 			'@': path.resolve(__dirname, '../src')
 		}
@@ -100,7 +99,7 @@ module.exports = {
 		new purifyCssWebpack({
 			paths: glob.sync(path.join(__dirname, "../src/pages/*/*.html"))
 		}),
-		
+		new VueLoaderPlugin()
 	]
 }
 

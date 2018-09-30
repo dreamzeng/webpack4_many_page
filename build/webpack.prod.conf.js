@@ -4,6 +4,11 @@ const merge = require("webpack-merge");
 // 清除目录等
 const cleanWebpackPlugin = require("clean-webpack-plugin");
 
+
+//预加载(preload) 将提前启动优先级高,以及将来将被使用资源的非渲染阻塞获取。要在编译时添加这些特性,我们可以使用 preload-webpack-plugin 。
+//const PreloadWebpackPlugin = require('preload-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
+
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
@@ -53,6 +58,15 @@ const webpackConfigProd = {
 					drop_console: true
 				}
 			}
+		}),
+		/* new PreloadWebpackPlugin({
+			rel: 'preload',
+			excludeHtmlNames : ['lazy.html', 'decorator.html'],
+			include: ['index']
+		}) */
+		new ScriptExtHtmlWebpackPlugin({
+			preload: /\.js$/,
+			//defaultAttribute: 'async'
 		})
 	],
 	module: {

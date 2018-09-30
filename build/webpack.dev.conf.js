@@ -3,6 +3,10 @@ const webpack = require("webpack");
 const merge = require("webpack-merge");
 const webpackConfigBase = require('./webpack.base.conf');
 
+//预加载(preload) 将提前启动优先级高,以及将来将被使用资源的非渲染阻塞获取。要在编译时添加这些特性,我们可以使用 preload-webpack-plugin 。
+//const PreloadWebpackPlugin = require('preload-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
+
 const webpackConfigDev = {
 	mode: 'development', // 通过 mode 声明开发环境
 	output: {
@@ -31,11 +35,18 @@ const webpackConfigDev = {
 	plugins: [
 		//热更新
 		new webpack.HotModuleReplacementPlugin(),
-		
 		new webpack.DefinePlugin({
 			'process.env.BASE_URL': '\"' + process.env.BASE_URL + '\"'
+		}),
+		/* new PreloadWebpackPlugin({
+			rel: 'preload',
+			excludeHtmlNames : ['lazy.html', 'decorator.html'],
+			include: ['index']
+		}) */
+		new ScriptExtHtmlWebpackPlugin({
+			preload: /\.js$/,
+			//defaultAttribute: 'async'
 		})
-		  
 	],
 	devtool: "source-map",  // 开启调试模式
 	module: {

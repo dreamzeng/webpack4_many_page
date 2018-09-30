@@ -1,5 +1,10 @@
 const extractTextPlugin = require("extract-text-webpack-plugin");
-const rules = [{
+const rules = [
+	{
+        test: /\.vue$/,
+        loader: 'vue-loader'
+    },
+	{
 		test: /\.(css|scss|sass)$/,
 		// 不分离的写法
 		// use: ["style-loader", "css-loader",sass-loader"]
@@ -13,7 +18,7 @@ const rules = [{
 			publicPath: "../"
 		})*/
 		// 区别开发环境和生成环境
-		use: process.env.NODE_ENV === "development" ? ["style-loader", "css-loader", "sass-loader", "postcss-loader"] : extractTextPlugin.extract({
+		use: process.env.NODE_ENV === "development" ? ["vue-style-loader","style-loader", "css-loader", "sass-loader", "postcss-loader"] : extractTextPlugin.extract({
 			fallback: "style-loader",
 			use: ["css-loader", "sass-loader", "postcss-loader"],
 			// css中的基础路径
