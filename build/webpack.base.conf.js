@@ -77,7 +77,7 @@ module.exports = {
 				}, */
 				vendor: {   // 抽离第三方插件
 					test: /node_modules/,   // 指定是node_modules下的第三方包
-					chunks: 'initial',
+					chunks: 'initial', //有三个可选值：initial(初始块)、async(按需加载块)、all(全部块)，默认为all;	
 					name: 'vendor',  // 打包后的文件名，任意命名    
 					// 设置优先级，防止和自定义的公共代码提取时被覆盖，不进行打包
 					priority: 10    
