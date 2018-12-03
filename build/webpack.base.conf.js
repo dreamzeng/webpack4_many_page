@@ -31,8 +31,8 @@ var getHtmlConfig = function (name, chunks) {
 };
 function getEntry() {
     var entry = {
-		'vendorExten': '@/vendors/vendor-exten.js',
-	};
+	'vendorExten': '@/vendors/vendor-exten.js',
+    };
     //读取src目录所有page入口
     glob.sync('./src/pages/**/*.js')
         .forEach(function (name) {
@@ -66,13 +66,13 @@ module.exports = {
 		// 'jquery': 'window.jQuery'
 	},
 	// 提取公共代码
-    optimization: {
+	 optimization: {
 		splitChunks: {
 			cacheGroups: {
 				vendorExten: {
-                    name: "vendorExten",
-                    chunks: "initial"
-                },
+				    name: "vendorExten",
+				    chunks: "initial"
+				},
 				vendor: {   // 抽离第三方插件
 					//test: /node_modules/,   // 指定是node_modules下的第三方包
 					test: /[\\/]node_modules[\\/](vue|element-ui)[\\/]/,
@@ -89,7 +89,7 @@ module.exports = {
 				}
 			}
 		}
-    },
+	},
 	plugins: [
 		// 全局暴露统一入口
 		new webpack.ProvidePlugin({
