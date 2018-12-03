@@ -17,20 +17,21 @@ const webpackConfigDev = {
 	devServer: {
 		contentBase: path.join(__dirname, "../src"),
 		publicPath:'/',
-		host: "172.25.196.21",
+		host: "0.0.0.0",
 		port: "8090",
 		overlay: true, // 浏览器页面上显示错误
 		// open: true, // 开启浏览器
 		// stats: "errors-only", //stats: "errors-only"表示只打印错误：
 		hot: true, // 开启热更新
 		//服务器代理配置项
-        proxy: {
-            '/test/*':{
-                target: 'https://www.baidu.com',
-                secure: true,
-                changeOrigin: true
-            }
-        }
+		proxy: {
+		    '/api':{
+			target: 'http://10.101.92.55:8080',
+			secure: true,
+			changeOrigin: true,
+			pathRewrite: {'^/api': ''}
+		    }
+		}
 	},
 	plugins: [
 		//热更新
