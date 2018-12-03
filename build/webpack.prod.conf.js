@@ -23,6 +23,7 @@ const webpackConfigProd = {
 		path: path.resolve(__dirname, '../dist'),
 		// 打包多出口文件
 		filename: './js/[name].[hash].js',
+		chunkFilename: './js/[name].[chunkhash:8].js', //块，配置了它，非入口entry的模块，会帮自动拆分文件，也就是大家常说的按需
 		publicPath: './'
 	},
 	//devtool: 'cheap-module-eval-source-map', //生产环境不开启 source-map
