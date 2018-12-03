@@ -26,7 +26,7 @@ const webpackConfigDev = {
 		//服务器代理配置项
 		proxy: {
 		    '/api':{
-			target: 'http://10.101.92.55:8080',
+			target: 'http://192.168.92.55:8080',
 			secure: true,
 			changeOrigin: true,
 			pathRewrite: {'^/api': ''}
