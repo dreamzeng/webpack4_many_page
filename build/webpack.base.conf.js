@@ -29,9 +29,10 @@ var getHtmlConfig = function (name, chunks) {
 		},
 	};
 };
-
 function getEntry() {
-    var entry = {};
+    var entry = {
+		'vendorExten': '@/vendors/vendor-exten.js',
+	};
     //读取src目录所有page入口
     glob.sync('./src/pages/**/*.js')
         .forEach(function (name) {
@@ -45,7 +46,7 @@ function getEntry() {
             //entry[n] = ['babel-polyfill',...eArr];
             entry[n] = eArr;
 		});
-		//console.log(entry);
+		console.log('....---***',entry);
     return entry;
 };
 
@@ -68,15 +69,13 @@ module.exports = {
     optimization: {
 		splitChunks: {
 			cacheGroups: {
-				/* polyfill: {
-					test: /[\\/]node_modules[\\/](core-js|raf|@babel|babel)[\\/]/,
-					name: 'polyfill',
-					priority: 2,
-					chunks: 'all',
-  					reuseExistingChunk: true
-				}, */
+				vendorExten: {
+                    name: "vendorExten",
+                    chunks: "initial"
+                },
 				vendor: {   // 抽离第三方插件
-					test: /node_modules/,   // 指定是node_modules下的第三方包
+					//test: /node_modules/,   // 指定是node_modules下的第三方包
+					test: /[\\/]node_modules[\\/](vue|element-ui)[\\/]/,
 					chunks: 'initial', //有三个可选值：initial(初始块)、async(按需加载块)、all(全部块)，默认为all;	
 					name: 'vendor',  // 打包后的文件名，任意命名    
 					// 设置优先级，防止和自定义的公共代码提取时被覆盖，不进行打包
@@ -114,11 +113,14 @@ module.exports = {
 const entryObj = getEntry();
 const htmlArray = [];
 Object.keys(entryObj).forEach(element => {
-	htmlArray.push({
-		_html: element,
-		title: '',
-		chunks: ['vendor', 'common', element]
-	})
+	//console.log('---',element)
+	if(element !== 'vendorExten'){
+		htmlArray.push({
+			_html: element,
+			title: '',
+			chunks: ['vendor','vendorExten', 'common', element]
+		})
+	}
 })
 
 //自动生成html模板
